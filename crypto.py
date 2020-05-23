@@ -15,8 +15,6 @@ def myfn():
     for i in range(0,3,1):
         print(data[i]['id']+'->'+data[i]['price'])
 
-
-
 while True:
     myfn()
     time.sleep(5)
