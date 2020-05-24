@@ -48,6 +48,7 @@ def menu():
         print("\n")
     elif option == 2:
         print("This process will run indefinitely until your alert is completed.\n")
+
         email = input("Introduce the email where the email will be sent to. ")
         crypto = input("Introduce the crypto you want to monitorize (BTC, ETH, XRP, XMR, USD) ")
         price = float(input("Introduce the value of the cryptocurrency you want to reach. "))
@@ -64,9 +65,9 @@ def menu():
         elif crypto.upper() == "ETH":
             stopalert = False
             while stopalert == False:
-                print("\n")
                 print(colored(checkETH(), "green"))
                 print("\n")
+                time.sleep(10)
                 if price <= checkETH():
                     sendEmail('ETH', str(price), email)
                     stopalert = True
