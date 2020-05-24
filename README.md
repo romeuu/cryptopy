@@ -13,5 +13,11 @@ You can fork the repository and then clone it to a folder you want. The steps ar
 - Once you got the link in the https clone tab, all you have to do is go to a terminal, and type git clone *url* in the folder you want the repository to get cloned.
 - Once you did this, you got the repository ready to work!
 
+### Prerequisites
+This project needs a couple of prerequisites, they are listed below and it is explained how to install them so the script runs well.<br/>
+
+- Python 3. You can get it here [Python 3](https://www.python.org/downloads/)<br/>
+- Termcolor. This prerequisite is used to color the python shell. You can install it by typing **pip install termcolor** or by typing **pip3 install termcolor**
+
 
 
