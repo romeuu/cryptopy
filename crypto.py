@@ -2,6 +2,7 @@ import urllib.request, json, os
 import time, math
 from dotenv import load_dotenv
 from termcolor import colored
+import smtplib
 
 from pathlib import Path
 env_path = Path('.') / '.env'
@@ -18,6 +19,27 @@ xrpprice = 0
 xmrprice = 0
 usdtprice = 0
 
+def sendEmail(crypto, price, to):
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+
+        server.login(os.getenv('gmail_email'), os.getenv('gmail_password'))
+
+        subject = "CryptoPY alert!"
+        body = "The price of "+crypto+" has reached "+price+"€, thank you for chosing CryptoPY!"
+        msg = f"Subject: {subject}\n\n{body}"
+
+        server.sendmail(
+            os.getenv('gmail_email'),
+            to,
+            msg.encode('utf-8').strip()
+        )
+        print("Email has been sent.")
+
+        server.quit()
+
 def menu():
     option = int(input("What do you want to do? \n1. Check current prices.\n2. Setup an alert.\n3. Check prices for x seconds.\n4. Exit.\n"))
     if option == 1:
@@ -25,7 +47,31 @@ def menu():
         checkPrices()
         print("\n")
     elif option == 2:
-        print("Alerts are in process, they will be out soon\n")
+        print("This process will run indefinitely until your alert is completed.\n")
+        email = input("Introduce the email where the email will be sent to. ")
+        crypto = input("Introduce the crypto you want to monitorize (BTC, ETH, XRP, XMR, USD) ")
+        price = float(input("Introduce the value of the cryptocurrency you want to reach. "))
+        
+        if crypto.upper() == "BTC":
+            stopalert = False
+            while stopalert == False:
+                print(colored(checkBTC(), "green"))
+                print("\n")
+                time.sleep(10)
+                if price <= checkBTC():
+                    sendEmail('BTC', str(checkBTC()), email)
+                    stopalert = True
+        elif crypto.upper() == "ETH":
+            stopalert = False
+            while stopalert == False:
+                print("\n")
+                print(colored(checkETH(), "green"))
+                print("\n")
+                if price <= checkETH():
+                    sendEmail('ETH', str(price), email)
+                    stopalert = True
+        
+        
     elif option == 3:
         seconds = int(input("Enter the seconds you want to monitor the prices, keep in mind that the prices are refreshed every 10 seconds. "))
         if seconds<30:
@@ -43,7 +89,7 @@ def menu():
     elif option == 4:
        global stop
        stop = True
-        
+
 def checkPrices():
     data = json.loads(urllib.request.urlopen(url).read())
     for i in range(0,5,1):
@@ -55,6 +101,8 @@ def checkPrices():
             elif float(data[i]['price']) < btcprice and btcprice != 0:
                 increment = False
                 inc = ((float(data[i]['price']) / btcprice) - 1 ) * 100
+            else:
+                inc = 0
             
             btcprice = float(data[i]['price'])
             if inc != 0:
@@ -72,6 +120,8 @@ def checkPrices():
             elif float(data[i]['price']) < ethprice and ethprice != 0:
                 increment = False
                 inc = ((float(data[i]['price']) / ethprice) - 1 ) * 100
+            else:
+                inc = 0
 
             ethprice = float(data[i]['price'])
             if inc != 0:
@@ -88,6 +138,8 @@ def checkPrices():
             elif float(data[i]['price']) < xrpprice and xrpprice != 0:
                 increment = False
                 inc = ((float(data[i]['price']) / xrpprice) - 1 ) * 100
+            else:
+                inc = 0
 
             xrpprice = float(data[i]['price'])
             if inc != 0:
@@ -104,6 +156,8 @@ def checkPrices():
             elif float(data[i]['price']) < xmrprice and xmrprice != 0:
                 increment = False
                 inc = ((float(data[i]['price']) / xmrprice) - 1 ) * 100
+            else:
+                inc = 0
 
             xmrprice = float(data[i]['price'])
             if inc != 0:
@@ -120,6 +174,8 @@ def checkPrices():
             elif float(data[i]['price']) < usdtprice and usdtprice != 0:
                 increment = False
                 inc = ((float(data[i]['price']) / usdtprice) - 1 ) * 100
+            else:
+                inc = 0
 
             usdtprice = float(data[i]['price'])
             if inc != 0:
@@ -129,6 +185,36 @@ def checkPrices():
                     print("USTD: "+str(usdtprice) + " ↓ "+colored(str(inc) + "%", "red"))
             else:
                 print("USTD: "+str(usdtprice) + " ~ "+colored(str(inc) + "%", "blue"))
+def checkBTC():
+    url = "https://api.nomics.com/v1/currencies/ticker?key="+os.getenv("api_key")+"&ids=BTC,ETH,XRP,XMR,USDT&interval=1d,30d&convert=EUR"
+    data = json.loads(urllib.request.urlopen(url).read())
+
+    btcprice = float(data[0]['price'])
+    return btcprice
+def checkETH():
+    url = "https://api.nomics.com/v1/currencies/ticker?key="+os.getenv("api_key")+"&ids=BTC,ETH,XRP,XMR,USDT&interval=1d,30d&convert=EUR"
+    data = json.loads(urllib.request.urlopen(url).read())
+
+    ethprice = float(data[1]['price'])
+    return ethprice
+def checkXRP():
+    url = "https://api.nomics.com/v1/currencies/ticker?key="+os.getenv("api_key")+"&ids=BTC,ETH,XRP,XMR,USDT&interval=1d,30d&convert=EUR"
+    data = json.loads(urllib.request.urlopen(url).read())
+
+    xrpprice = float(data[2]['price'])
+    return xrpprice
+def checkXMR():
+    url = "https://api.nomics.com/v1/currencies/ticker?key="+os.getenv("api_key")+"&ids=BTC,ETH,XRP,XMR,USDT&interval=1d,30d&convert=EUR"
+    data = json.loads(urllib.request.urlopen(url).read())
+
+    xmrprice = float(data[3]['price'])
+    return xmrprice
+def checkUSDT():
+    url = "https://api.nomics.com/v1/currencies/ticker?key="+os.getenv("api_key")+"&ids=BTC,ETH,XRP,XMR,USDT&interval=1d,30d&convert=EUR"
+    data = json.loads(urllib.request.urlopen(url).read())
+
+    usdtprice = float(data[4]['price'])
+    return usdtprice
 
 while stop != True:
     menu()
