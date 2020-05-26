@@ -237,25 +237,26 @@ def convertEURBTC(eur):
 def trading(sell, buy, amount, bankroll, steps, buymoney):
     while True:
         # 20€ ~ 0,0025BTC
-        print("PRICE OF BTC: ", colored(checkBTC(), "green"), "\n")
-
-        if checkBTC()>=sell and amount>0:
-            print(colored("Selling...\n", "green"))
+        btcprice = checkBTC()
+        
+        if btcprice>=sell and amount>0:
+            print("Selling -> ", colored(btcprice, "green"))
 
             amount -= steps
             bankroll += convertBTCEUR(steps)
 
             print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
 
-        if buy>=checkBTC() and bankroll>0:
-            print(colored("Buying...\n", "blue"))
+        if buy>=btcprice and bankroll>0:
+            print("Buying -> ", colored(btcprice, "red"))
 
             bankroll -= convertBTCEUR(steps)
             amount += convertEURBTC(buymoney)
-            
+
             print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
 
-        time.sleep(60)
+        print("idle -> ", colored(btcprice, "blue"))
+        time.sleep(10)
 
 while stop != True:
     menu()
