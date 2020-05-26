@@ -92,9 +92,11 @@ def menu():
         print("Entering trading simulation...\n")
         sell = float(input("Enter the price whenever you want to sell your cryptocurrency -> "))
         buy = float(input("Enter the price whenever you want to buy your cryptocurrency -> "))
-        amount = float(input("Enter the money you want to start with -> "))
+        amount = float(input("Enter the amount of crypto you want to start with -> "))
+        bankroll = float(input("Enter the money you have to buy crypto -> "))
+        steps = float(input("Enter how much you want to sell each time (in your desired cryptocurrency) -> "))
 
-
+        trading(sell, buy, amount, bankroll, steps)
     elif option == 5:
        global stop
        print("See you soon!")
@@ -225,6 +227,24 @@ def checkUSDT():
 
     usdtprice = float(data[4]['price'])
     return usdtprice
+def convertBTCEUR(btc):
+    btcvalue = checkBTC()
+    return btc * btcvalue
+def trading(sell, buy, amount, bankroll, steps):
+    while True:
+        # 20€ ~ 0,0025BTC
+        print("PRICE OF BTC: ", colored(checkBTC(), "green"), "\n")
+        if checkBTC()>=sell:
+            print("Selling...")
+            if amount > 0:
+                amount -= steps
+                print("Remaining to sell: ", amount)
+                bankroll += convertBTCEUR(steps)
+        if buy>=checkBTC():
+            print("Buying...")
+
+        print("Your bankroll",bankroll)
+        time.sleep(10)
 
 while stop != True:
     menu()
