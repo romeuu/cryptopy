@@ -41,11 +41,12 @@ def sendEmail(crypto, price, to):
         server.quit()
 
 def menu():
-    option = int(input("What do you want to do? \n1. Check current prices.\n2. Setup an alert.\n3. Check prices for x seconds.\n4. Exit.\n"))
+    option = int(input("What do you want to do? \n1. Check current prices.\n2. Setup an alert.\n3. Check prices for x seconds.\n4. Simulate trading.\n5. Exit.\n"))
     if option == 1:
         print("\n")
         checkPrices()
         print("\n")
+
     elif option == 2:
         print("This process will run indefinitely until your alert is completed.\n")
 
@@ -88,7 +89,15 @@ def menu():
                 print("\n")
                 time.sleep(10)
     elif option == 4:
+        print("Entering trading simulation...\n")
+        sell = float(input("Enter the price whenever you want to sell your cryptocurrency -> "))
+        buy = float(input("Enter the price whenever you want to buy your cryptocurrency -> "))
+        amount = float(input("Enter the money you want to start with -> "))
+
+
+    elif option == 5:
        global stop
+       print("See you soon!")
        stop = True
 
 def checkPrices():
