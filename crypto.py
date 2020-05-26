@@ -90,6 +90,8 @@ def menu():
                 time.sleep(10)
     elif option == 4:
         print("Entering trading simulation...\n")
+
+        crypto = input("Introduce the crypto you want to trade with (BTC, ETH, XRP, XMR, USD) -> ")
         sell = float(input("Enter the price whenever you want to sell your cryptocurrency (EUR) -> "))
         buy = float(input("Enter the price whenever you want to buy your cryptocurrency (EUR) -> "))
         amount = float(input("Enter the amount of crypto you want to start with (CRYPTO) -> "))
@@ -97,7 +99,7 @@ def menu():
         steps = float(input("Enter how much you want to sell each time (CRYPTO) -> "))
         buymoney = float(input("Enter how much money you want to spend buying (EUR) -> "))
 
-        trading(sell, buy, amount, bankroll, steps, buymoney)
+        trading(crypto, sell, buy, amount, bankroll, steps, buymoney)
     elif option == 5:
        global stop
        print("See you soon!")
@@ -234,29 +236,57 @@ def convertBTCEUR(btc):
 def convertEURBTC(eur):
     btcvalue = checkBTC()
     return eur / btcvalue
-def trading(sell, buy, amount, bankroll, steps, buymoney):
+def convertETHEUR(eth):
+    ethvalue = checkETH()
+    return eth * ethvalue
+def convertEURETH(eur):
+    ethvalue = checkETH()
+    return eur / ethvalue
+def trading(crypto, sell, buy, amount, bankroll, steps, buymoney):
     while True:
-        # 20€ ~ 0,0025BTC
-        btcprice = checkBTC()
         
-        if btcprice>=sell and amount>0:
-            print("Selling -> ", colored(btcprice, "green"))
+        if crypto.upper() == "BTC":
+            btcprice = checkBTC()
+            
+            if btcprice>=sell and amount>0:
+                print("Selling -> ", colored(btcprice, "green"))
 
-            amount -= steps
-            bankroll += convertBTCEUR(steps)
+                amount -= steps
+                bankroll += convertBTCEUR(steps)
 
-            print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
 
-        if buy>=btcprice and bankroll>0:
-            print("Buying -> ", colored(btcprice, "red"))
+            if buy>=btcprice and bankroll>0:
+                print("Buying -> ", colored(btcprice, "red"))
 
-            bankroll -= convertBTCEUR(steps)
-            amount += convertEURBTC(buymoney)
+                bankroll -= convertBTCEUR(steps)
+                amount += convertEURBTC(buymoney)
 
-            print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
 
-        print("idle -> ", colored(btcprice, "blue"))
-        time.sleep(10)
+            print("idle -> ", colored(btcprice, "blue"))
+            time.sleep(10)
+        elif crypto.upper() == "ETH":
+            ethprice = checkETH()
+            
+            if ethprice>=sell and amount>0:
+                print("Selling -> ", colored(ethprice, "green"))
+
+                amount -= steps
+                bankroll += convertETHEUR(steps)
+
+                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=ethprice and bankroll>0:
+                print("Buying -> ", colored(ethprice, "red"))
+
+                bankroll -= convertETHEUR(steps)
+                amount += convertEURETH(buymoney)
+
+                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+
+            print("idle -> ", colored(ethprice, "blue"))
+            time.sleep(10)
 
 while stop != True:
     menu()
