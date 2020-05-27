@@ -90,11 +90,16 @@ def menu():
                 time.sleep(10)
     elif option == 4:
         print("Entering trading simulation...\n")
-        sell = float(input("Enter the price whenever you want to sell your cryptocurrency -> "))
-        buy = float(input("Enter the price whenever you want to buy your cryptocurrency -> "))
-        amount = float(input("Enter the money you want to start with -> "))
 
+        crypto = input("Introduce the crypto you want to trade with (BTC, ETH, XRP, XMR, USDT) -> ")
+        sell = float(input("Enter the price whenever you want to sell your cryptocurrency (EUR) -> "))
+        buy = float(input("Enter the price whenever you want to buy your cryptocurrency (EUR) -> "))
+        amount = float(input("Enter the amount of crypto you want to start with (CRYPTO) -> "))
+        bankroll = float(input("Enter the money you have to buy crypto (EUR) -> "))
+        steps = float(input("Enter how much you want to sell each time (CRYPTO) -> "))
+        buymoney = float(input("Enter how much money you want to spend buying (EUR) -> "))
 
+        trading(crypto, sell, buy, amount, bankroll, steps, buymoney)
     elif option == 5:
        global stop
        print("See you soon!")
@@ -225,6 +230,178 @@ def checkUSDT():
 
     usdtprice = float(data[4]['price'])
     return usdtprice
+def convertBTCEUR(btc):
+    btcvalue = checkBTC()
+    return btc * btcvalue
+def convertEURBTC(eur):
+    btcvalue = checkBTC()
+    return eur / btcvalue
+def convertETHEUR(eth):
+    ethvalue = checkETH()
+    return eth * ethvalue
+def convertEURETH(eur):
+    ethvalue = checkETH()
+    return eur / ethvalue
+def convertXRPEUR(xrp):
+    xrpvalue = checkXRP()
+    return xrp * xrpvalue
+def convertEURXRP(eur):
+    xrpvalue = checkXRP()
+    return eur / xrpvalue
+def convertXMREUR(xmr):
+    xmrvalue = checkXMR()
+    return xmr * xmrvalue
+def convertEURXMR(eur):
+    xmrvalue = checkXMR()
+    return eur / xmrvalue
+def convertUSDTEUR(usdt):
+    usdtvalue = checkUSDT()
+    return usdt * usdtvalue
+def convertEURUSDT(eur):
+    usdtvalue = checkUSDT()
+    return eur / usdtvalue
 
+def trading(crypto, sell, buy, amount, bankroll, steps, buymoney):
+    while True:
+        if crypto.upper() == "BTC":
+            btcprice = checkBTC()
+            
+            if btcprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(btcprice, "green"))
+                    amount -= steps
+                    bankroll += convertBTCEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=btcprice and bankroll>0:
+                print("Buying -> ", colored(btcprice, "red"))
+
+                if bankroll - convertBTCEUR(steps) > 0:
+                    bankroll -= convertBTCEUR(steps)
+                    amount += convertEURBTC(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+                
+            if buy<btcprice<sell:
+                print("idle -> ", colored(btcprice, "blue"))
+    
+            time.sleep(10)
+        elif crypto.upper() == "ETH":
+            ethprice = checkETH()
+            
+            if ethprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(ethprice, "green"))
+                    amount -= steps
+                    bankroll += convertETHEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=ethprice and bankroll>0:
+                print("Buying -> ", colored(ethprice, "red"))
+
+                if bankroll - convertETHEUR(steps) > 0:
+                    bankroll -= convertETHEUR(steps)
+                    amount += convertEURETH(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy<ethprice<sell:
+                print("idle -> ", colored(ethprice, "blue"))
+
+            time.sleep(10)
+        elif crypto.upper() == "XRP":
+            xrpprice = checkXRP()
+            
+            if xrpprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(xrpprice, "green"))
+                    amount -= steps
+                    bankroll += convertXRPEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=xrpprice and bankroll>0:
+                print("Buying -> ", colored(xrpprice, "red"))
+
+                if bankroll - convertXRPEUR(steps) > 0:
+                    bankroll -= convertXRPEUR(steps)
+                    amount += convertEURXRP(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy<xrpprice<sell:
+                print("idle -> ", colored(xrpprice, "blue"))
+
+            time.sleep(10)
+        elif crypto.upper() == "XMR":
+            xmrprice = checkXMR()
+            
+            if xmrprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(xmrprice, "green"))
+                    amount -= steps
+                    bankroll += convertXMREUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=xmrprice and bankroll>0:
+                print("Buying -> ", colored(xmrprice, "red"))
+
+                if bankroll - convertXMREUR(steps) > 0:
+                    bankroll -= convertXMREUR(steps)
+                    amount += convertEURXMR(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy<xmrprice<sell:
+                print("idle -> ", colored(xmrprice, "blue"))
+
+            time.sleep(10)
+        elif crypto.upper() == "USDT":
+            usdtprice = checkUSDT()
+            
+            if usdtprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(usdtprice, "green"))
+                    amount -= steps
+                    bankroll += convertUSDTEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=usdtprice and bankroll>0:
+                print("Buying -> ", colored(usdtprice, "red"))
+
+                if bankroll - convertUSDTEUR(steps) > 0:
+                    bankroll -= convertUSDTEUR(steps)
+                    amount += convertEURUSDT(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy<usdtprice<sell:
+                print("idle -> ", colored(usdtprice, "blue"))
+
+            time.sleep(10)
 while stop != True:
     menu()
