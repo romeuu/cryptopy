@@ -249,44 +249,58 @@ def trading(crypto, sell, buy, amount, bankroll, steps, buymoney):
             btcprice = checkBTC()
             
             if btcprice>=sell and amount>0:
-                print("Selling -> ", colored(btcprice, "green"))
+                if amount - steps > 0:
+                    print("Selling -> ", colored(btcprice, "green"))
+                    amount -= steps
+                    bankroll += convertBTCEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
 
-                amount -= steps
-                bankroll += convertBTCEUR(steps)
-
-                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
 
             if buy>=btcprice and bankroll>0:
                 print("Buying -> ", colored(btcprice, "red"))
 
-                bankroll -= convertBTCEUR(steps)
-                amount += convertEURBTC(buymoney)
+                if bankroll - convertBTCEUR(steps) > 0:
+                    bankroll -= convertBTCEUR(steps)
+                    amount += convertEURBTC(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
 
-                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
-
-            print("idle -> ", colored(btcprice, "blue"))
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+                
+            if buy<btcprice<sell:
+                print("idle -> ", colored(btcprice, "blue"))
+    
             time.sleep(10)
         elif crypto.upper() == "ETH":
             ethprice = checkETH()
             
             if ethprice>=sell and amount>0:
-                print("Selling -> ", colored(ethprice, "green"))
+                if amount - steps > 0:
+                    print("Selling -> ", colored(ethprice, "green"))
+                    amount -= steps
+                    bankroll += convertETHEUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
 
-                amount -= steps
-                bankroll += convertETHEUR(steps)
-
-                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
 
             if buy>=ethprice and bankroll>0:
                 print("Buying -> ", colored(ethprice, "red"))
 
-                bankroll -= convertETHEUR(steps)
-                amount += convertEURETH(buymoney)
+                if bankroll - convertETHEUR(steps) > 0:
+                    bankroll -= convertETHEUR(steps)
+                    amount += convertEURETH(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
 
-                print("STATS:\n amount ->",amount," \nbankroll->",bankroll)
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+                
+            if buy<ethprice<sell:
+                print("idle -> ", colored(ethprice, "blue"))
 
-            print("idle -> ", colored(ethprice, "blue"))
             time.sleep(10)
-
+        
 while stop != True:
     menu()
