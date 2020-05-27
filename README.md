@@ -36,12 +36,12 @@ python3 crypto.py
 Once you do this, a menu will pop up, asking what do you want to do, there are 4 different options.
 - Option 1 (**Check current prices**): This option provides the current prices for the cryptocurrencies listed above.
 ![Current prices](https://raw.githubusercontent.com/romeuu/cryptopy/doc/docs/1.gif)
-- Option 2 (**Setup an alert**): It sets an alert so when the price drops or gets to the price you have indicated in the alert, an email is sent.
+- Option 2 (**Setup an alert**): It sets an alert so when the price drops or gets to the price you have indicated in the alert, an email is sent.  
 ![Alert](https://raw.githubusercontent.com/romeuu/cryptopy/doc/docs/2.gif)
-- Option 3 (**Check prices for x seconds**): This option gives you the hability to check the prices for the cryptos for the time you want (in seconds). So you are able to run it autopilot if you wish to, for instance, you can put a day in seconds and it will work. Furthermore, this option will check the variances (increments and decreasements).
+- Option 3 (**Check prices for x seconds**): This option gives you the hability to check the prices for the cryptos for the time you want (in seconds). So you are able to run it autopilot if you wish to, for instance, you can put a day in seconds and it will work. Furthermore, this option will check the variances (increments and decreasements).  
 ![Check prices for seconds](https://raw.githubusercontent.com/romeuu/cryptopy/doc/docs/3.gif)
-- Option 4 (**Simulate trading**): This is a safe environment to test out trading strategies, or just to try to trade in a safe environment before trading with real money. 
-![Trading environment](https://raw.githubusercontent.com/romeuu/cryptopy/doc/docs/4.gif)
+- Option 4 (**Simulate trading**): This is a safe environment to test out trading strategies, or just to try to trade in a safe environment before trading with real money.  
+![Trading environment](https://raw.githubusercontent.com/romeuu/cryptopy/doc/docs/4.gif)  
 As you can see, there are a list of arguments you have to give to the script so it runs well:
     + **Crytpo you are going to trade.**
     + **Price where you want to sell and buy.**
