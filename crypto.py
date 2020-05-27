@@ -91,7 +91,7 @@ def menu():
     elif option == 4:
         print("Entering trading simulation...\n")
 
-        crypto = input("Introduce the crypto you want to trade with (BTC, ETH, XRP, XMR, USD) -> ")
+        crypto = input("Introduce the crypto you want to trade with (BTC, ETH, XRP, XMR, USDT) -> ")
         sell = float(input("Enter the price whenever you want to sell your cryptocurrency (EUR) -> "))
         buy = float(input("Enter the price whenever you want to buy your cryptocurrency (EUR) -> "))
         amount = float(input("Enter the amount of crypto you want to start with (CRYPTO) -> "))
@@ -248,6 +248,13 @@ def convertXRPEUR(xrp):
 def convertEURXRP(eur):
     xrpvalue = checkXRP()
     return eur / xrpvalue
+def convertXMREUR(xmr):
+    xmrvalue = checkXMR()
+    return xmr * xmrvalue
+def convertEURXMR(eur):
+    xmrvalue = checkXMR()
+    return eur / xmrvalue
+
 def trading(crypto, sell, buy, amount, bankroll, steps, buymoney):
     while True:
         
@@ -333,6 +340,34 @@ def trading(crypto, sell, buy, amount, bankroll, steps, buymoney):
 
             if buy<xrpprice<sell:
                 print("idle -> ", colored(xrpprice, "blue"))
+
+            time.sleep(10)
+        elif crypto.upper() == "XMR":
+            xmrprice = checkXMR()
+            
+            if xmrprice>=sell and amount>0:
+                if amount - steps > 0:
+                    print("Selling -> ", colored(xmrprice, "green"))
+                    amount -= steps
+                    bankroll += convertXMREUR(steps)
+                else:
+                    print(colored("Insufficient crypto to sell...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy>=xmrprice and bankroll>0:
+                print("Buying -> ", colored(xmrprice, "red"))
+
+                if bankroll - convertXMREUR(steps) > 0:
+                    bankroll -= convertXMREUR(steps)
+                    amount += convertEURXMR(buymoney)
+                else:
+                    print(colored("Insufficient funds to buy crypto...\n", "red"))
+
+                print("STATS:\namount ->",amount," \nbankroll->",bankroll)
+
+            if buy<xmrprice<sell:
+                print("idle -> ", colored(xmrprice, "blue"))
 
             time.sleep(10)
 while stop != True:
